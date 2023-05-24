@@ -12,9 +12,9 @@ router = APIRouter()
 
 
 @router.post(
-        '/attributes',
-        summary='Extract Image Attributes',
-        description='Extracts and returns the attributes of an uploaded raster image.'
+    '/attributes',
+    summary='Extract Image Attributes',
+    description='Extracts and returns the attributes of an uploaded raster image.'
 )
 async def attributes(image: UploadFile):
     """
