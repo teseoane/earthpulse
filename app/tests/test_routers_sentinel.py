@@ -29,7 +29,7 @@ def test_thumbnail_endpoint():
     with open('test_image.tiff', 'rb') as f:
         response = client.post(
             '/api/v1/thumbnail',
-            files={'file': ('test_image.tiff', f, 'image/tiff')},
+            files={'image': ('test_image.tiff', f, 'image/tiff')},
             data={'resolution': '300'},
         )
 

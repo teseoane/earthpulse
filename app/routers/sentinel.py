@@ -23,9 +23,9 @@ async def attributes(image: UploadFile):
 
 
 @router.post('/thumbnail')
-async def create_thumbnail(file: UploadFile, resolution: Optional[int] = Form(None)):
-    with rasterio.open(file.file) as src:
-        img = src.read([1, 2, 3])
+async def create_thumbnail(image: UploadFile, resolution: Optional[int] = Form(None)):
+    with rasterio.open(image.file) as dataset:
+        img = dataset.read([1, 2, 3])
 
     img_array = np.array(img)
     img_array = reshape_as_image(img_array)
@@ -38,5 +38,4 @@ async def create_thumbnail(file: UploadFile, resolution: Optional[int] = Form(No
         img_pil.thumbnail((resolution, resolution))
 
     img_pil.save('thumbnail.png')
-
-    return {'filename': str(file.filename)}
+    return {'filename': str(image.filename)}
