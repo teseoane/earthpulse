@@ -26,10 +26,10 @@ def test_attributes():
 
 
 def test_thumbnail_endpoint():
-    with open('test_image.tiff', 'rb') as f:
+    with open('test_image.tiff', 'rb') as img:
         response = client.post(
             '/api/v1/thumbnail',
-            files={'image': ('test_image.tiff', f, 'image/tiff')},
+            files={'image': ('test_image.tiff', img, 'image/tiff')},
             data={'resolution': '300'},
         )
 
@@ -50,6 +50,19 @@ def test_thumbnail_endpoint():
 
     # Clean up
     os.remove('thumbnail.png')
+
+
+def test_ndvi_endpoint():
+    with open('test_image.tiff', 'rb') as img:
+        response = client.post(
+            '/api/v1/ndvi',
+            files={'image': ('test_image.tiff', img, 'image/tiff')},
+            data={'palette': 'viridis'},
+        )
+
+    assert response.status_code == 200
+    assert response.content
+    assert response.headers['content-type'] == 'image/png'
 
 
 @pytest.fixture(autouse=True)
