@@ -1,7 +1,11 @@
 from io import BytesIO
+from typing import Optional
 
+import numpy as np
 import rasterio
-from fastapi import APIRouter, UploadFile
+from fastapi import APIRouter, Form, UploadFile
+from PIL import Image
+from rasterio.plot import reshape_as_image
 
 router = APIRouter()
 
@@ -16,3 +20,23 @@ async def attributes(image: UploadFile):
             'bbox': dataset.bounds
         }
     return attributes
+
+
+@router.post('/thumbnail')
+async def create_thumbnail(file: UploadFile, resolution: Optional[int] = Form(None)):
+    with rasterio.open(file.file) as src:
+        img = src.read([1, 2, 3])
+
+    img_array = np.array(img)
+    img_array = reshape_as_image(img_array)
+
+    img_norm = (img_array - img_array.min()) / (img_array.max() - img_array.min())
+
+    img_pil = Image.fromarray(np.uint8(img_norm * 255))
+
+    if resolution:
+        img_pil.thumbnail((resolution, resolution))
+
+    img_pil.save('thumbnail.png')
+
+    return {'filename': str(file.filename)}
