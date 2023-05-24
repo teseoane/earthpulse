@@ -10,7 +10,7 @@ client = TestClient(app)
 
 
 def test_attributes():
-    with open('test_image.tiff', 'rb') as img:
+    with open('app/tests/images/test_image.tiff', 'rb') as img:
         response = client.post('/api/v1/attributes', files={'image': ('test_image.tiff', img, 'image/tiff')})
 
     assert response.status_code == 200
@@ -26,7 +26,7 @@ def test_attributes():
 
 
 def test_thumbnail_endpoint():
-    with open('test_image.tiff', 'rb') as img:
+    with open('app/tests/images/test_image.tiff', 'rb') as img:
         response = client.post(
             '/api/v1/thumbnail',
             files={'image': ('test_image.tiff', img, 'image/tiff')},
@@ -53,7 +53,7 @@ def test_thumbnail_endpoint():
 
 
 def test_ndvi_endpoint():
-    with open('test_image.tiff', 'rb') as img:
+    with open('app/tests/images/test_image.tiff', 'rb') as img:
         response = client.post(
             '/api/v1/ndvi',
             files={'image': ('test_image.tiff', img, 'image/tiff')},
