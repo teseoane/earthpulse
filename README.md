@@ -16,6 +16,56 @@ docker-compose up
 ```bash
 docker compose  run --rm web python -m pytest
 
+## API Documentation
+
+### POST /attributes
+This endpoint is responsible for extracting and returning the attributes of an uploaded raster image.
+
+#### Parameters:
+- `image`: The raster image file to be processed. This should be included in the body of the request as form data.
+
+#### Response:
+Returns a JSON object containing the attributes of the image:
+- `image_size`: A dictionary with 'width' and 'height' of the image.
+- `num_bands`: The number of bands in the image.
+- `crs`: The Coordinate Reference System (CRS) of the image.
+- `bbox`: The bounding box of the image.
+
+Example usage:
+```bash
+curl -X POST -F "image=@path_to_your_image.tiff" http://localhost:8888/api/v1/attributes
+```
+
+### POST /thumbnail
+This endpoint creates a thumbnail of an uploaded raster image and saves it as 'thumbnail.png'.
+
+#### Parameters:
+- `image`: The raster image file to be processed. This should be included in the body of the request as form data.
+- `resolution` (optional): The resolution for the thumbnail.
+
+#### Response:
+Returns a JSON object containing the filename of the image.
+
+Example usage:
+```bash
+curl -X POST -F "image=@path_to_your_image.tiff" -F "resolution=200" http://localhost:8888/api/v1/thumbnail
+```
+
+### POST /ndvi
+This endpoint calculates the Normalized Difference Vegetation Index (NDVI) of an uploaded raster image.
+
+#### Parameters:
+- `image`: The raster image file to be processed. This should be included in the body of the request as form data.
+- `palette` (optional): The color palette to be used for the resulting NDVI image. The default palette is 'viridis'.
+
+#### Response:
+Returns the resulting NDVI image as a PNG file.
+
+Example usage:
+```bash
+curl -X POST -F "image=@path_to_your_image.tiff" -F "palette=magma" http://localhost:8888/api/v1/ndvi
+```
+
 ## Notes:
 
 I chose to let the hole code in the router to be easyer to check the amount of lines but I prefer to add a service layer and let the router only performs validation checks.
